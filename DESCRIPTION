@@ -1,0 +1,22 @@
+Package: lantrn
+Type: Package
+Title: Tools for Efficient and Error-free Coding
+Version: 0.1.0
+Authors@R: person("Irwin", "Hecker",email="irwin.hecker@inserm.fr",role = c("aut", "cre"))
+Maintainer: Irwin Hecker <irwin.hecker@inserm.fr>
+Description: The `lantrn` package provides a suite of tools to help you code efficiently and effectively. It includes functions for visual feedback, error checking, and more.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports:
+  dplyr,
+  tidyr,
+  ggplot2,
+  ggsankey,
+  stringr
+Remotes:
+    davidsjoberg/ggsankey
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+RoxygenNote: 7.2.3
