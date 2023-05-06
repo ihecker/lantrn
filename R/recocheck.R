@@ -35,7 +35,7 @@
 #'recocheck(df,c("snack","id_category"),"new_snack_group")
 recocheck <- function(df,old_vars,new_var) {
 
-  TotalCount = nrow(df)
+  TotalCount = nrow(df) #to create percentages later
 
   df <- df %>%
     select(all_of(old_vars),all_of(new_var))%>%
@@ -48,16 +48,16 @@ recocheck <- function(df,old_vars,new_var) {
                           T~name),
            node=as.character(str_extract(node, "^[^;]+")))
 
-  dagg <- df%>%
+  stat <- df%>%
     dplyr::group_by(node)%>%
     tally()
 
-  dagg <- dagg%>%
+  stat <- stat%>%
     dplyr::group_by(node)%>%
     dplyr::mutate(pct = n/TotalCount)
 
   # Step 3
-  df <- merge(df, dagg, by.x = 'node', by.y = 'node', all.x = TRUE)
+  df <- merge(df, stat, by.x = 'node', by.y = 'node', all.x = TRUE)
 
   plot <- ggplot(df, aes(x = x, next_x = next_x, node = node, next_node = next_node, fill = factor(name), label = paste0(node," n=", n, '(',  round(pct* 100,1), '%)' ))) +
     geom_sankey(flow.alpha = .6,
