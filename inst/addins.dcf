@@ -1,0 +1,9 @@
+Name: Insert summary(as.factor())
+Description: Inserts summary(as.factor()) and move the cursor into the brackets
+Binding: sumasf
+Interactive: false
+
+Name: Insert ->df%>%
+Description: Inserts ->df%>% and a linebreak
+Binding: pipini
+Interactive: false

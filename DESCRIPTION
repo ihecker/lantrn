@@ -9,11 +9,12 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
-  dplyr,
-  tidyr,
-  ggplot2,
-  ggsankey,
-  stringr
+    dplyr,
+    tidyr,
+    ggplot2,
+    ggsankey,
+    stringr,
+    rstudioapi
 Remotes:
     davidsjoberg/ggsankey
 Suggests: 
