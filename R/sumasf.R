@@ -4,7 +4,8 @@
 #' @export
 #'
 #' @examples
-#' Check and try the keyboard shortcut
+#' require(rstudioapi)
+#' sumasf()
 sumasf <- function() {
   insertText("summary(as.factor())")
   context <- rstudioapi::getActiveDocumentContext()

@@ -13,5 +13,5 @@ Insert ->df%>% written with the cursor moved to the line below
 Insert ->df%>%
 }
 \examples{
-Check and try the keyboard shortcut
+pipini()
 }

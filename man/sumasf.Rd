@@ -13,5 +13,5 @@ summary(as.factor()) written with the cursor moved into the brackets
 Insert summary(as.factor())
 }
 \examples{
-Check and try the keyboard shortcut
+sumasf()
 }

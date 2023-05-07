@@ -4,7 +4,8 @@
 #' @export
 #'
 #' @examples
-#' Check and try the keyboard shortcut
+#' require(rstudioapi)
+#' pipini()
 pipini <- function() {
   selected_text <- rstudioapi::selectionGet()
   context <- rstudioapi::getActiveDocumentContext()
@@ -15,5 +16,3 @@ pipini <- function() {
   current_selection$range$end["row"] <- current_selection$range$end["row"]+1
   setCursorPosition(current_selection$range$end)
 }
-
-pipini()
