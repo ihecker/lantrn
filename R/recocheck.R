@@ -74,3 +74,63 @@ recocheck <- function(df,old_vars,new_var) {
 
   return(plot)
 }
+
+####not bad old num, new cat####
+library(dplyr)
+library(ggplot2)
+
+# Sample data
+age <- c(5, 15, 28, 32, 40, 52, 60, 70, 80)
+
+# Recode age groups into scores
+df <- data.frame(age = age) %>%
+  mutate(scores = case_when(
+    between(age, 0, 10) ~ "0-10",
+    between(age, 11, 20) ~ "11-20",
+    between(age, 21, 30) ~ "21-30",
+    between(age, 31, 40) ~ "31-40",
+    TRUE ~ "40+"
+  ))
+
+# Calculate counts for each age group and score
+df_counts <- df %>%
+  count(scores, sort = FALSE)
+
+# Plot grouped bar plot with ggplot2
+ggplot(df_counts, aes(x = scores, y = n, fill = scores)) +
+  geom_bar(stat = "identity") +
+  ylab("Frequency") +
+  xlab("Age Group") +
+  geom_text(aes(label = n), vjust = -0.5) +
+  geom_segment(aes(x = scores, xend = scores, y = 0, yend = n),
+               arrow = arrow(length = unit(0.02, "npc")), color = "black", alpha = 0.5) +
+  theme(legend.position = "none")
+
+####num ####
+library(ggplot2)
+
+# Sample data
+old_values1 <- c(10, 20, 30, 40)
+old_values2 <- c(15, 25, 35, 45)
+new_values <- c(1, 2, 3, 4)
+
+# Create data frame
+df <- data.frame(old_values1, old_values2, new_values)
+
+# Convert data frame to long format
+library(tidyr)
+df_long <- pivot_longer(df, cols = c(old_values1, old_values2), names_to = "Old_Variable", values_to = "Old_Values")
+
+# Plot scatter plot with ggplot2
+ggplot(df_long, aes(x = Old_Values, y = new_values, color = Old_Variable)) +
+  geom_point() +
+  geom_segment(aes(x = Old_Values, xend = Old_Values, y = 0, yend = new_values),
+               arrow = arrow(length = unit(0.02, "npc")), color = "black", alpha = 0.5) +
+  geom_segment(aes(x = 0, xend = Old_Values, y = new_values, yend = new_values),
+               arrow = arrow(length = unit(0.02, "npc")), color = "black", alpha = 0.5) +
+  xlim(0, max(df_long$Old_Values) + 5) +
+  ylim(0, max(df_long$new_values) + 5) +
+  xlab("Old Values") +
+  ylab("New Values")
+
+####old cat
