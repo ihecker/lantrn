@@ -75,62 +75,207 @@ recocheck <- function(df,old_vars,new_var) {
   return(plot)
 }
 
-####not bad old num, new cat####
-library(dplyr)
+
+
+####old num, new cat####
 library(ggplot2)
+library(dplyr)
 
-# Sample data
-age <- c(5, 15, 28, 32, 40, 52, 60, 70, 80)
+# Function to create a horizontal grouped bar chart with annotations
+library(purrr)
 
-# Recode age groups into scores
-df <- data.frame(age = age) %>%
-  mutate(scores = case_when(
-    between(age, 0, 10) ~ "0-10",
-    between(age, 11, 20) ~ "11-20",
-    between(age, 21, 30) ~ "21-30",
-    between(age, 31, 40) ~ "31-40",
-    TRUE ~ "40+"
-  ))
+create_grouped_bar_chart <- function(df, old_vars, new_var) {
+  # Prepare the data for annotations
+  annotations <- df %>%
+    group_by(category) %>%
+    summarize(across(all_of(old_vars), sum), recoded_value = n())
 
-# Calculate counts for each age group and score
-df_counts <- df %>%
-  count(scores, sort = FALSE)
+  # Create the grouped bar chart with annotations
+  p <- ggplot(df, aes(x = category))
 
-# Plot grouped bar plot with ggplot2
-ggplot(df_counts, aes(x = scores, y = n, fill = scores)) +
-  geom_bar(stat = "identity") +
-  ylab("Frequency") +
-  xlab("Age Group") +
-  geom_text(aes(label = n), vjust = -0.5) +
-  geom_segment(aes(x = scores, xend = scores, y = 0, yend = n),
-               arrow = arrow(length = unit(0.02, "npc")), color = "black", alpha = 0.5) +
-  theme(legend.position = "none")
+  for (i in seq_along(old_vars)) {
+    p <- p + geom_col(aes(y = .data[[old_vars[[i]]]], fill = sprintf("Variable %d", i)), position = "stack", width = 0.5)
+  }
 
-####num ####
+  p <- p + annotate(
+    "text",
+    x = annotations$category,
+    y = rowSums(annotations[, all_of(old_vars)]),
+    label = paste("Total:", rowSums(annotations[, all_of(old_vars)])),
+    hjust = -0.2,
+    color = "black"
+  ) +
+    annotate(
+      "text",
+      x = annotations$category,
+      y = rowSums(annotations[, all_of(old_vars)]),
+      label = paste("Recoded:", annotations$recoded_value),
+      hjust = 1.2,
+      color = "black"
+    ) +
+    labs(x = "Category", y = "Value") +
+    scale_fill_brewer(palette = "Accent") +
+    theme_minimal() +
+    coord_flip()  # Flips the chart to make it horizontal
+
+  return(p)
+}
+
+
+
+# Example usage
+df <- data.frame(
+  category = c("A", "B", "C", "D"),
+  var1 = c(10, 15, 8, 12),
+  var2 = c(7, 9, 14, 5))
+
+df<- df %>%
+  mutate(recoded = if_else(var1 > var2, "High", "Low"))
+
+create_grouped_bar_chart(df, c("var1","var2"), "recoded")
+
+
+####num both####
 library(ggplot2)
 
 # Sample data
 old_values1 <- c(10, 20, 30, 40)
 old_values2 <- c(15, 25, 35, 45)
+old_values3 <- c(40, 40, 40, 45)
 new_values <- c(1, 2, 3, 4)
 
 # Create data frame
-df <- data.frame(old_values1, old_values2, new_values)
+df <- data.frame(old_values1, old_values2, old_values3, new_values)
 
 # Convert data frame to long format
 library(tidyr)
-df_long <- pivot_longer(df, cols = c(old_values1, old_values2), names_to = "Old_Variable", values_to = "Old_Values")
+
+create_grouped_bar_chart <- function(df, old_vars, new_var) {
+df_long <- pivot_longer(df, cols = all_of(cat_vars), names_to = "Old_Variable", values_to = "Old_Values")
 
 # Plot scatter plot with ggplot2
-ggplot(df_long, aes(x = Old_Values, y = new_values, color = Old_Variable)) +
-  geom_point() +
-  geom_segment(aes(x = Old_Values, xend = Old_Values, y = 0, yend = new_values),
+plot<- ggplot(df_long, aes(x = Old_Values, y = new_var, color = Old_Variable)) +
+  geom_point(size=10) +
+  scale_colour_brewer(palette = "Accent") +
+  geom_segment(aes(x = Old_Values, xend = Old_Values, y = 0, yend = new_var),
                arrow = arrow(length = unit(0.02, "npc")), color = "black", alpha = 0.5) +
-  geom_segment(aes(x = 0, xend = Old_Values, y = new_values, yend = new_values),
+  geom_segment(aes(x = 0, xend = Old_Values, y = new_var, yend = new_var),
                arrow = arrow(length = unit(0.02, "npc")), color = "black", alpha = 0.5) +
   xlim(0, max(df_long$Old_Values) + 5) +
-  ylim(0, max(df_long$new_values) + 5) +
+  ylim(0, max(df_long$new_var) + 5) +
   xlab("Old Values") +
-  ylab("New Values")
+  ylab("New Values") +
+  theme_minimal() +
+  coord_flip()
 
-####old cat
+return(plot)
+
+}
+
+create_grouped_bar_chart <- function(df, c("old_values1", "old_values2", "old_values3"), new_values)
+
+
+####old cat, new num####
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+# Function to create a grouped bar chart with multiple categorical variables and a numeric variable
+create_grouped_bar_chart <- function(df, old_vars, new_var) {
+
+  # Prepare the data for the grouped bar chart
+  df_long <- df %>%
+    pivot_longer(cols = all_of(old_vars), names_to = "Category", values_to = "Value")
+
+  # Create the grouped bar chart
+  plot <- ggplot(df_long, aes(x = Value, y = num_var, fill = Category)) +
+    geom_col(position = "dodge") +
+    labs(x = "Category", y = new_var) +
+    theme_minimal()
+
+  return(plot)
+}
+
+# Example usage
+df <- data.frame(
+  category1 = c("A", "B", "C", "D"),
+  category2 = c("X", "Y", "X", "Y"),
+  category3 = c("M", "M", "N", "N"),
+  num_var = c(10, 15, 8, 12)
+)
+
+create_grouped_bar_chart(df, c("category1", "category2", "category3"), "num_var")
+
+####old mix new cat####
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+# Function to create a stacked bar chart with a mix of old categorical and numeric variables recoded to a categorical value
+create_stacked_bar_chart <- function(df, old_cat_vars, old_num_vars, recoded_var) {
+
+  # Recode old numeric variables to categorical values
+  df <- df %>%
+    mutate(
+      across(all_of(old_num_vars),
+             ~ ifelse(. > 0, "Positive", ifelse(. < 0, "Negative", "Zero")))
+    )
+
+  # Prepare the data for the stacked bar chart
+  df_long <- df %>%
+    pivot_longer(cols = all_of(old_cat_vars), names_to = "Category", values_to = "Value")
+
+  # Create the stacked bar chart
+  ggplot(df_long, aes(x = Category, fill = Value)) +
+    geom_bar(position = "fill") +
+    labs(x = "Category", y = "Proportion", fill = recoded_var) +
+    theme_minimal()
+}
+
+# Example usage
+df <- data.frame(
+  category1 = c("A", "B", "C", "D"),
+  category2 = c("X", "Y", "X", "Y"),
+  num_var1 = c(10, -15, 8, -12),
+  num_var2 = c(-5, 3, 0, -2)
+)
+
+create_stacked_bar_chart(df, c("category1", "category2"), c("num_var1", "num_var2"), "recoded")
+
+####old mix new num####
+
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+# Function to create a scatter plot with a mix of old categorical and numeric variables recoded to a numeric value
+create_scatter_plot <- function(df, old_cat_vars, old_num_vars, recoded_var) {
+
+  # Recode old numeric variables to numeric values
+  df <- df %>%
+    mutate(
+      across(all_of(old_num_vars),
+             ~ ifelse(. > 0, 1, ifelse(. < 0, -1, 0)))
+    )
+
+  # Prepare the data for the scatter plot
+  df_long <- df %>%
+    pivot_longer(cols = all_of(old_cat_vars), names_to = "Category", values_to = "Value")
+
+  # Create the scatter plot
+  ggplot(df_long, aes(x = Category, y = Value, color = as.factor({{ recoded_var }}))) +
+    geom_point() +
+    labs(x = "Category", y = "Value", color = recoded_var) +
+    theme_minimal()
+}
+
+# Example usage
+df <- data.frame(
+  category1 = c("A", "B", "C", "D"),
+  category2 = c("X", "Y", "X", "Y"),
+  num_var1 = c(10, -15, 8, -12),
+  num_var2 = c(-5, 3, 0, -2)
+)
+
+create_scatter_plot(df, c("category1", "category2"), c("num_var1", "num_var2"), "recoded")
