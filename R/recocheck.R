@@ -43,7 +43,7 @@ library(tidyr)
 
 recocheck <- function(df,old_vars,new_var) {
 
-  if (!(is.numeric(df[[new_var]]))&!(is.numeric(all_of(df[[new_var]]))))
+  if (!(any(sapply(df[c(old_vars, new_var)], is.numeric))))
     {
 
   TotalCount = nrow(df) #to create percentages later
@@ -124,11 +124,11 @@ if (!(is.numeric(df[[new_var]]))&is.numeric(all_of(df[[new_var]]))){
 
   return(p)
   }
-}
+
 
 ####num both####
 
-if (is.numeric(df[[new_var]])&is.numeric(all_of(df[[new_var]])))
+if (all(sapply(df[c(old_vars, new_var)], is.numeric)))
   {
 
 
@@ -155,7 +155,7 @@ return(plot)
 
 
 # Function to create a grouped bar chart with multiple categorical variables and a numeric variable
-if (!(is.numeric(df[[new_var]]))&is.numeric(all_of(df[[new_var]]))){
+if (!any(sapply(df[, old_vars], is.numeric)) && is.numeric(df[[new_var]])){
 
 
   # Prepare the data for the grouped bar chart
@@ -172,105 +172,139 @@ if (!(is.numeric(df[[new_var]]))&is.numeric(all_of(df[[new_var]]))){
  }
 
 
-# Function to create a stacked bar chart with a mix of old categorical and numeric variables recoded to a categorical value
-create_stacked_bar_chart <- function(df, old_cat_vars, old_num_vars, new_var) {
+# # Function to create a stacked bar chart with a mix of old categorical and numeric variables recoded to a categorical value
+# create_stacked_bar_chart <- function(df, old_cat_vars, old_num_vars, new_var) {
+#
+#   # Recode old numeric variables to categorical values
+#
+#
+#   # Prepare the data for the stacked bar chart
+#   df_long <- df %>%
+#     pivot_longer(cols = all_of(old_cat_vars), names_to = "Category", values_to = "Value")
+#
+#   # Create the stacked bar chart
+#   ggplot(df_long, aes(x = Category, fill = Value)) +
+#     geom_bar(position = "fill") +
+#     labs(x = "Category", y = "Proportion", fill = new_var) +
+#     theme_minimal()
+# }
 
-  # Recode old numeric variables to categorical values
 
 
-  # Prepare the data for the stacked bar chart
-  df_long <- df %>%
-    pivot_longer(cols = all_of(old_cat_vars), names_to = "Category", values_to = "Value")
-
-  # Create the stacked bar chart
-  ggplot(df_long, aes(x = Category, fill = Value)) +
-    geom_bar(position = "fill") +
-    labs(x = "Category", y = "Proportion", fill = new_var) +
-    theme_minimal()
-}
-
-# Example usage
-df <- data.frame(
-  category1 = c("A", "B", "C", "D"),
-  category2 = c("X", "Y", "X", "Y"),
-  num_var1 = c(10, -15, 8, -12),
-  num_var2 = c(-5, 3, 0, -2)
-)
-
-df <- df %>%
-  mutate(recoded=
-    across(all_of(old_num_vars),
-           ~ ifelse(. > 0, "Positive", ifelse(. < 0, "Negative", "Zero")))
-  )
-
-create_stacked_bar_chart(df, c("category1", "category2"), c("num_var1", "num_var2"), "recoded")
 
 ####old mix new num####
 
-library(ggplot2)
-library(dplyr)
-library(tidyr)
 
 # Function to create a scatter plot with a mix of old categorical and numeric variables recoded to a numeric value
-create_scatter_plot <- function(df, old_cat_vars, old_num_vars, recoded_var) {
+# create_scatter_plot <- function(df, old_cat_vars, old_num_vars, recoded_var) {
+#
+#
+#   # Prepare the data for the scatter plot
+#   df_long <- df %>%
+#     pivot_longer(cols = all_of(old_cat_vars), names_to = "Category", values_to = "Value")
+#
+#   # Create the scatter plot
+#   ggplot(df_long, aes(x = Category, y = Value, color = as.factor({{ recoded_var }}))) +
+#     geom_point() +
+#     labs(x = "Category", y = "Value", color = recoded_var) +
+#     theme_minimal()
+# }
 
+  if (any(sapply(df[, old_vars], is.numeric)) &&
+      any(sapply(df[, old_vars], function(x) !is.numeric(x))) &&
+      is.numeric(df[[new_var]])) {
 
-  # Prepare the data for the scatter plot
-  df_long <- df %>%
-    pivot_longer(cols = all_of(old_cat_vars), names_to = "Category", values_to = "Value")
+    toKeep <- sapply(df, is.numeric)
 
-  # Create the scatter plot
-  ggplot(df_long, aes(x = Category, y = Value, color = as.factor({{ recoded_var }}))) +
-    geom_point() +
-    labs(x = "Category", y = "Value", color = recoded_var) +
-    theme_minimal()
-}
-
-# Example usage
-df <- data.frame(
-  category1 = c("A", "B", "C", "D"),
-  category2 = c("X", "Y", "X", "Y"),
-  num_var1 = c(10, -15, 8, -12),
-  num_var2 = c(-5, 3, 0, -2)
-)
-
-df <- df %>%
-  mutate(recoded=
-    across(all_of(c("num_var1","num_var2")),
-           ~ ifelse(. > 0, 1, ifelse(. < 0, -1, 0)))
-  )
-
-create_scatter_plot(df, c("category1", "category2"), c("num_var1", "num_var2"), "recoded")
-
-create_mixed_plot <- function(df, old_cat_vars, old_num_vars, recoded_var) {
 
   # Convert all variables to character type
   df <- df %>%
-    mutate(across(all_of(c(old_cat_vars, old_num_vars, recoded_var)), as.character))
+    mutate(across(c(old_vars, new_var), as.character))
 
 
   # Prepare the data for the scatter plot
   df_scatter <- df %>%
-    select({{ old_num_vars }}, {{ recoded_var }}) %>%
-    pivot_longer(cols = everything(), names_to = "Variable", values_to = "Value")
+    select(new_var, names(toKeep)[as.numeric(toKeep) == 1]) %>%
+    pivot_longer(cols = -new_var, names_to = "Variable", values_to = "Value")
 
   # Prepare the data for the stacked bars
   df_bars <- df %>%
-    pivot_longer(cols = all_of(old_cat_vars), names_to = "Category", values_to = "Value") %>%
+    select(new_var, names(toKeep)[as.numeric(toKeep) == 0]) %>%
+    pivot_longer(cols = -new_var, names_to = "Category", values_to = "Value") %>%
     mutate(Variable = "Categorical")
 
   # Combine the data for the scatter plot and stacked bars
   df_combined <- bind_rows(df_scatter, df_bars)
 
   # Create the mixed plot
-  ggplot(df_combined, aes(x = Category, y = Value, fill = Variable)) +
+  plot<- ggplot(df_combined, aes(x = Category, y = Value, fill = Variable)) +
     geom_bar(data = filter(df_combined, Variable == "Categorical"), stat = "identity", position = "stack") +
     geom_point(data = filter(df_combined, Variable != "Categorical"), position = position_dodge(width = 0.5)) +
     labs(x = "Category", y = "Value", fill = "Variable") +
     theme_minimal()
+ return(plot)
 }
 
+####old mix new cat to code
+
+
+  if (any(sapply(df[, old_vars], is.numeric)) &&
+      any(sapply(df[, old_vars], function(x) !is.numeric(x))) &&
+      !(is.numeric(df[[new_var]]))) {
+
+    toKeep <- sapply(df, is.numeric)
+
+
+  # Prepare the data for the scatter plot
+  df_scatter <- df %>%
+    select(new_var, names(toKeep)[as.numeric(toKeep) == 1]) %>%
+    pivot_longer(cols = -new_var, names_to = "Variable", values_to = "Value")
+
+  # Prepare the data for the stacked bars
+  df_bars <- df %>%
+    select(new_var, names(toKeep)[as.numeric(toKeep) == 0]) %>%
+    pivot_longer(cols = -new_var, names_to = "Category", values_to = "Value") %>%
+    mutate(Variable = "Categorical")
+
+  # Combine the data for the scatter plot and stacked bars
+  df_combined <- bind_rows(df_scatter, df_bars)
+
+  # Create the mixed plot
+  plot<- ggplot(df_combined, aes(x = Category, y = Value, fill = Variable)) +
+    geom_bar(data = filter(df_combined, Variable == "Categorical"), stat = "identity", position = "stack") +
+    geom_point(data = filter(df_combined, Variable != "Categorical"), position = position_dodge(width = 0.5)) +
+    labs(x = "Category", y = "Value", fill = "Variable") +
+    theme_minimal()
+
+  return(plot)
+}
+
+}
+
+df <- data.frame(
+  category1 = c("A", "B", "C", "D"),
+  category2 = c("X", "Y", "X", "Y"),
+  num_var1 = c(10, -15, 8, -12),
+  num_var2 = c(-5, 3, 0, -2)
+)
+
+df <- df %>%
+  mutate(recoded=ifelse(num_var1 > 0, 1, ifelse(. < 0, -1, 0))
+  )
+
+recocheck(df, c("category1", "category2","num_var1", "num_var2"), "recoded")
+
+
+
+
+
 # Example usage
+
+
+create_scatter_plot(df, c("category1", "category2"), c("num_var1", "num_var2"), "recoded")
+
+
+# Example usage #old mix new num
 df <- data.frame(
   category1 = c("A", "B", "C", "D"),
   category2 = c("X", "Y", "X", "Y"),
@@ -282,34 +316,11 @@ df$recoded_var <- ifelse(df$num_var1 > 0, "Positive", ifelse(df$num_var1 < 0, "N
 
 create_mixed_plot(df, c("category1", "category2"), c("num_var1", "num_var2"), "recoded_var")
 
-####old mix new cat to code
-
-create_mixed_plot <- function(df, old_cat_vars, old_num_vars, recoded_var) {
 
 
 
-  # Prepare the data for the scatter plot
-  df_scatter <- df %>%
-    select({{ old_num_vars }}, {{ recoded_var }}) %>%
-    pivot_longer(cols = everything(), names_to = "Variable", values_to = "Value")
 
-  # Prepare the data for the stacked bars
-  df_bars <- df %>%
-    pivot_longer(cols = all_of(old_cat_vars), names_to = "Category", values_to = "Value") %>%
-    mutate(Variable = "Categorical")
-
-  # Combine the data for the scatter plot and stacked bars
-  df_combined <- bind_rows(df_scatter, df_bars)
-
-  # Create the mixed plot
-  ggplot(df_combined, aes(x = Category, y = Value, fill = Variable)) +
-    geom_bar(data = filter(df_combined, Variable == "Categorical"), stat = "identity", position = "stack") +
-    geom_point(data = filter(df_combined, Variable != "Categorical"), position = position_dodge(width = 0.5)) +
-    labs(x = "Category", y = "Value", fill = "Variable") +
-    theme_minimal()
-}
-
-# Example usage
+# Example usage old mix new cat
 df <- data.frame(
   category1 = c("A", "B", "C", "D"),
   category2 = c("X", "Y", "X", "Y"),
