@@ -20,14 +20,17 @@ seletail <- function(df, n, selec = FALSE, exclu = FALSE) {
 
   selected <- colnames(df[, (ncol(df) - n + 1):ncol(df)])
   excluded <- colnames(df[, 1:(ncol(df) - n)])
+  df<- df[, (ncol(df) - n + 1):ncol(df)]
+  if (selec) { txt_selec<- "Selected variables:"
+  } else{selected<- NULL
+txt_selec<- NULL}
 
-  if (selec) {
-} else{selected<- NULL}
-
-  if (exclu) {
-  } else{excluded<- NULL}
-cat("Selected variables:",selected,"","Excluded variables:",excluded,sep="\n")
-
+  if (exclu) { txt_exclu<- "Excluded variables:"
+  } else{excluded<- NULL
+  txt_exclu<- NULL}
+cat(txt_selec,selected,"",txt_exclu,excluded,sep="\n")
+ return(df)
 }
 
+new_df<- df %>% seletail(2,T,F)
 
