@@ -6,6 +6,7 @@
 #' @examples
 #' require(rstudioapi)
 #' pipini()
+library(rstudioapi)
 pipini <- function() {
   selected_text <- rstudioapi::selectionGet()
   context <- rstudioapi::getActiveDocumentContext()

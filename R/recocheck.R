@@ -171,45 +171,6 @@ if (!any(sapply(df[, old_vars], is.numeric)) && is.numeric(df[[new_var]])){
   return(plot)
  }
 
-
-# # Function to create a stacked bar chart with a mix of old categorical and numeric variables recoded to a categorical value
-# create_stacked_bar_chart <- function(df, old_cat_vars, old_num_vars, new_var) {
-#
-#   # Recode old numeric variables to categorical values
-#
-#
-#   # Prepare the data for the stacked bar chart
-#   df_long <- df %>%
-#     pivot_longer(cols = all_of(old_cat_vars), names_to = "Category", values_to = "Value")
-#
-#   # Create the stacked bar chart
-#   ggplot(df_long, aes(x = Category, fill = Value)) +
-#     geom_bar(position = "fill") +
-#     labs(x = "Category", y = "Proportion", fill = new_var) +
-#     theme_minimal()
-# }
-
-
-
-
-####old mix new num####
-
-
-# Function to create a scatter plot with a mix of old categorical and numeric variables recoded to a numeric value
-# create_scatter_plot <- function(df, old_cat_vars, old_num_vars, recoded_var) {
-#
-#
-#   # Prepare the data for the scatter plot
-#   df_long <- df %>%
-#     pivot_longer(cols = all_of(old_cat_vars), names_to = "Category", values_to = "Value")
-#
-#   # Create the scatter plot
-#   ggplot(df_long, aes(x = Category, y = Value, color = as.factor({{ recoded_var }}))) +
-#     geom_point() +
-#     labs(x = "Category", y = "Value", color = recoded_var) +
-#     theme_minimal()
-# }
-
   if (any(sapply(df[, old_vars], is.numeric)) &&
       any(sapply(df[, old_vars], function(x) !is.numeric(x))) &&
       is.numeric(df[[new_var]])) {
@@ -281,53 +242,51 @@ if (!any(sapply(df[, old_vars], is.numeric)) && is.numeric(df[[new_var]])){
 
 }
 
-df <- data.frame(
-  category1 = c("A", "B", "C", "D"),
-  category2 = c("X", "Y", "X", "Y"),
-  num_var1 = c(10, -15, 8, -12),
-  num_var2 = c(-5, 3, 0, -2)
-)
-
-df <- df %>%
-  mutate(recoded=ifelse(num_var1 > 0, 1, ifelse(. < 0, -1, 0))
-  )
-
-recocheck(df, c("category1", "category2","num_var1", "num_var2"), "recoded")
-
-
-
-
-
-# Example usage
-
-
-create_scatter_plot(df, c("category1", "category2"), c("num_var1", "num_var2"), "recoded")
-
-
-# Example usage #old mix new num
-df <- data.frame(
-  category1 = c("A", "B", "C", "D"),
-  category2 = c("X", "Y", "X", "Y"),
-  num_var1 = c(10, -15, 8, -12),
-  num_var2 = c(-5, 3, 0, -2)
-)
-
-df$recoded_var <- ifelse(df$num_var1 > 0, "Positive", ifelse(df$num_var1 < 0, "Negative", "Zero"))
-
-create_mixed_plot(df, c("category1", "category2"), c("num_var1", "num_var2"), "recoded_var")
-
-
-
-
-
-# Example usage old mix new cat
-df <- data.frame(
-  category1 = c("A", "B", "C", "D"),
-  category2 = c("X", "Y", "X", "Y"),
-  num_var1 = c(10, -15, 8, -12),
-  num_var2 = c(-5, 3, 0, -2)
-)
-
-df$recoded_var <- ifelse(df$num_var1 > 0, "Positive", ifelse(df$num_var1 < 0, "Negative", "Zero"))
-
-create_mixed_plot(df, c("category1", "category2"), c("num_var1", "num_var2"), "recoded_var")
+# df <- data.frame(
+#   category1 = c("A", "B", "C", "D"),
+#   category2 = c("X", "Y", "X", "Y"),
+#   num_var1 = c(10, -15, 8, -12),
+#   num_var2 = c(-5, 3, 0, -2)
+# )
+#
+# df <- df %>%
+#   mutate(recoded=ifelse(num_var1 > 0, 1, ifelse(. < 0, -1, 0))
+#   )
+#
+# recocheck(df, c("category1", "category2","num_var1", "num_var2"), "recoded")
+#
+#
+#
+# # Example usage
+#
+#
+# create_scatter_plot(df, c("category1", "category2"), c("num_var1", "num_var2"), "recoded")
+#
+#
+# # Example usage #old mix new num
+# df <- data.frame(
+#   category1 = c("A", "B", "C", "D"),
+#   category2 = c("X", "Y", "X", "Y"),
+#   num_var1 = c(10, -15, 8, -12),
+#   num_var2 = c(-5, 3, 0, -2)
+# )
+#
+# df$recoded_var <- ifelse(df$num_var1 > 0, "Positive", ifelse(df$num_var1 < 0, "Negative", "Zero"))
+#
+# create_mixed_plot(df, c("category1", "category2"), c("num_var1", "num_var2"), "recoded_var")
+#
+#
+#
+#
+#
+# # Example usage old mix new cat
+# df <- data.frame(
+#   category1 = c("A", "B", "C", "D"),
+#   category2 = c("X", "Y", "X", "Y"),
+#   num_var1 = c(10, -15, 8, -12),
+#   num_var2 = c(-5, 3, 0, -2)
+# )
+#
+# df$recoded_var <- ifelse(df$num_var1 > 0, "Positive", ifelse(df$num_var1 < 0, "Negative", "Zero"))
+#
+# create_mixed_plot(df, c("category1", "category2"), c("num_var1", "num_var2"), "recoded_var")
