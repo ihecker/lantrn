@@ -14,18 +14,20 @@
 #' Snack5 = c("Rice cakes", "Greek yogurt", "Oranges", "Hazelnuts", "Cherry tomatoes", "Apple slices", "Blackberries", "Radishes", "Veggies with dip", "Mandarin")
 #' )
 #'
-#' seletail(df,2,selec=T,not_selec=T)
+#' seletail(df,2,selec=T,exclu=T)
 
-seletail <- function(df, n, selec = FALSE, not_selec = FALSE) {
+seletail <- function(df, n, selec = FALSE, exclu = FALSE) {
+
   selected <- colnames(df[, (ncol(df) - n + 1):ncol(df)])
-  not_selected <- colnames(df[, 1:(ncol(df) - n)])
+  excluded <- colnames(df[, 1:(ncol(df) - n)])
 
   if (selec) {
 } else{selected<- NULL}
 
-  if (not_selec) {
-  } else{not_selected<- NULL}
-cat("Selected variables:\n",selected, "\n","Variables not selected:\n",not_selected, "\n")
+  if (exclu) {
+  } else{excluded<- NULL}
+cat("Selected variables:",selected,"","Excluded variables:",excluded,sep="\n")
+
 }
 
 
