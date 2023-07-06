@@ -6,14 +6,14 @@
 #' @return A data frame with the specified number of variables starting from the last variable.
 #' @export
 #' @examples
-# df <- data.frame(
-# Snack1 = c("Apple", "Carrot sticks", "Yogurt", "Almonds", "Celery", "Banana", "Grapes", "Cucumber", "Peanut butter", "Orange"),
-# Snack2 = c("Baby carrots", "Kale chips", "String cheese", "Berries", "Bell peppers", "Pistachios", "Mango", "Cherry tomatoes", "Hummus", "Pear"),
-# Snack3 = c("Trail mix", "Cottage cheese", "Pineapple", "Walnuts", "Broccoli", "Peach", "Blueberries", "Snap peas", "Greek yogurt", "Strawberries"),
-# Snack4 = c("Popcorn", "Hard-boiled eggs", "Watermelon", "Cashews", "Cauliflower", "Kiwi", "Raspberries", "Zucchini", "Nut butter", "Grapefruit"),
-# Snack5 = c("Rice cakes", "Greek yogurt", "Oranges", "Hazelnuts", "Cherry tomatoes", "Apple slices", "Blackberries", "Radishes", "Veggies with dip", "Mandarin")
-# )
-
+#' df <- data.frame(
+#' Snack1 = c("Apple", "Carrot sticks", "Yogurt", "Almonds", "Celery", "Banana", "Grapes", "Cucumber", "Peanut butter", "Orange"),
+#' Snack2 = c("Baby carrots", "Kale chips", "String cheese", "Berries", "Bell peppers", "Pistachios", "Mango", "Cherry tomatoes", "Hummus", "Pear"),
+#' Snack3 = c("Trail mix", "Cottage cheese", "Pineapple", "Walnuts", "Broccoli", "Peach", "Blueberries", "Snap peas", "Greek yogurt", "Strawberries"),
+#' Snack4 = c("Popcorn", "Hard-boiled eggs", "Watermelon", "Cashews", "Cauliflower", "Kiwi", "Raspberries", "Zucchini", "Nut butter", "Grapefruit"),
+#' Snack5 = c("Rice cakes", "Greek yogurt", "Oranges", "Hazelnuts", "Cherry tomatoes", "Apple slices", "Blackberries", "Radishes", "Veggies with dip", "Mandarin")
+#' )
+#'
 #' seletail(df,2,selec=T,exclu=T)
 
 seletail <- function(df, n, selec = FALSE, exclu = FALSE) {
