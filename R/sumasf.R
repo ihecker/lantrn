@@ -5,7 +5,9 @@
 #'
 #' @examples
 #' require(rstudioapi)
+
 #' sumasf()
+
 sumasf <- function() {
   insertText("summary(as.factor())")
   context <- rstudioapi::getActiveDocumentContext()
