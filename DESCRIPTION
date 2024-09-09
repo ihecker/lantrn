@@ -2,7 +2,7 @@ Package: lantrn
 Type: Package
 Title: Tools for Efficient and Error-free Coding
 Version: 0.1.0
-Authors@R: person("Irwin", "Hecker",email="irwin.hecker@iplesp.upmc.fr",role = c("aut", "cre"))
+Authors@R: person("Irwin", "Hecker",email="irwin.hecker.iplesp.upmc@gmail.com",role = c("aut", "cre"))
 Maintainer: Irwin Hecker <irwin.hecker.iplesp.upmc@gmail.com>
 Description: The `lantrn` package provides a suite of tools to help you code efficiently and effectively. It includes functions for visual feedback, error checking, and more.
 License: MIT + file LICENSE
