@@ -2,10 +2,8 @@
 #' @name pipini
 #' @description
 #' This function inserts the text `-> df %>%` at the current selection in the active R script in RStudio.
-#' After insertion, the cursor is moved to the line below the inserted text, allowing you to continue
-#' typing or making changes in the next line.
 #'
-#' @return Insert "-> df %>%" written with the cursor moved to the line below
+#' @return Insert "-> df %>%"
 #' @export
 #'
 #' @examples
@@ -34,6 +32,7 @@
 #' } else {
 #'   message("RStudio is not running. Skipping RStudio-specific examples.")
 #' }
+#'
 library(rstudioapi)
 pipini <- function() {
   selected_text <- rstudioapi::selectionGet()

@@ -10,11 +10,11 @@
 #' @export
 #' @examples
 #' df <- data.frame(
-#'   Snack1 = c("Apple", "Carrot sticks", "Yogurt", "Almonds", "Celery", "Banana", "Grapes", "Cucumber", "Peanut butter", "Orange"),
-#'   Snack2 = c("Baby carrots", "Kale chips", "String cheese", "Berries", "Bell peppers", "Pistachios", "Mango", "Cherry tomatoes", "Hummus", "Pear"),
-#'   Snack3 = c("Trail mix", "Cottage cheese", "Pineapple", "Walnuts", "Broccoli", "Peach", "Blueberries", "Snap peas", "Greek yogurt", "Strawberries"),
-#'   Snack4 = c("Popcorn", "Hard-boiled eggs", "Watermelon", "Cashews", "Cauliflower", "Kiwi", "Raspberries", "Zucchini", "Nut butter", "Grapefruit"),
-#'   Snack5 = c("Rice cakes", "Greek yogurt", "Oranges", "Hazelnuts", "Cherry tomatoes", "Apple slices", "Blackberries", "Radishes", "Veggies with dip", "Mandarin")
+#'   Snack1 = c("Apple", "Carrot sticks", "Yogurt", "Almonds", "Celery"),
+#'   Snack2 = c("Baby carrots", "Kale chips", "String cheese", "Berries", "Bell peppers"),
+#'   Snack3 = c("Trail mix", "Cottage cheese", "Pineapple", "Walnuts", "Broccoli"),
+#'   Snack4 = c("Popcorn", "Hard-boiled eggs", "Watermelon", "Cashews", "Cauliflower"),
+#'   Snack5 = c("Rice cakes", "Greek yogurt", "Oranges", "Hazelnuts", "Cherry tomatoes")
 #' )
 #'
 #' seletail(df, 2, selec = TRUE, exclu = TRUE)

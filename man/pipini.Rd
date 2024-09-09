@@ -4,12 +4,10 @@
 \alias{pipini}
 \title{Insert -> df %>%}
 \value{
-Insert "-> df %>%" written with the cursor moved to the line below
+Insert "-> df %>%"
 }
 \description{
 This function inserts the text `-> df %>%` at the current selection in the active R script in RStudio.
-After insertion, the cursor is moved to the line below the inserted text, allowing you to continue
-typing or making changes in the next line.
 }
 \examples{
 require(rstudioapi)
@@ -37,4 +35,5 @@ rstudioapi::documentClose(rstudioapi::getActiveDocumentContext()$id, save = FALS
 } else {
   message("RStudio is not running. Skipping RStudio-specific examples.")
 }
+
 }
