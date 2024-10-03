@@ -1,9 +1,9 @@
-#' Insert -> df %>%
+#' Insert -> df + pipe operator
 #' @name pipini
 #' @description
-#' This function inserts the text `-> df %>%` at the current selection in the active R script in RStudio.
+#' This function inserts the text `-> df + pipe operator` at the current selection in the active R script in RStudio.
 #'
-#' @return Insert "-> df %>%"
+#' @return Insert `-> df + pipe operator`
 #' @export
 #'
 #' @examples

@@ -2,12 +2,12 @@
 % Please edit documentation in R/pipini.R
 \name{pipini}
 \alias{pipini}
-\title{Insert -> df %>%}
+\title{Insert -> df + pipe operator}
 \value{
-Insert "-> df %>%"
+Insert `-> df + pipe operator`
 }
 \description{
-This function inserts the text `-> df %>%` at the current selection in the active R script in RStudio.
+This function inserts the text `-> df + pipe operator` at the current selection in the active R script in RStudio.
 }
 \examples{
 require(rstudioapi)
